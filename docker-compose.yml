@@ -1,9 +1,7 @@
 version: "3"
-volumes:
-  pgdata:
 services:
   pagila:
-    image: postgres:13.2
+    image: postgres:16.4
     container_name: pagila
     environment:
       POSTGRES_PASSWORD: 123456
@@ -11,11 +9,8 @@ services:
     volumes:
       - ./pagila-schema.sql:/docker-entrypoint-initdb.d/1-pagila-schema.sql
       - ./pagila-data.sql:/docker-entrypoint-initdb.d/2-pagila-data.sql
-      - pgdata:/var/lib/postgresql/data
     expose:
       - 5432
-    ports:
-      - 5432:5432
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -25,3 +20,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+  jupyter-spark:
+    image: jupyter/pyspark-notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./postgresql-42.7.4.jar:/jars/postgresql-42.7.4.jar
